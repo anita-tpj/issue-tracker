@@ -3,6 +3,7 @@ import React from 'react';
 import Link from "next/link";
 import classNames from "classnames"
 import {usePathname} from "next/navigation";
+import { AiFillBug } from "react-icons/ai";
 
 const NavBar = () => {
     const links =[
@@ -14,7 +15,7 @@ const NavBar = () => {
     console.log(currentPath)
     return (
         <nav className="flex gap-6 h-14 mb-5 px-5 border-b items-center">
-            <Link href="/">Logo</Link>
+            <Link href="/"><AiFillBug /></Link>
             <ul className="flex gap-4">
                 {links.map(link =>
                     <Link
