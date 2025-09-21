@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import IssueActions from "@/app/issues/IssueActions";
 
-const IssueLoadingPage = () => {
+const LoadingIssuePage = () => {
     const issues = [1, 2, 3, 4, 5]
     return (
         <div>
@@ -36,4 +36,4 @@ const IssueLoadingPage = () => {
     );
 };
 
-export default IssueLoadingPage;
+export default LoadingIssuePage;
