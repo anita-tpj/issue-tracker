@@ -12,6 +12,7 @@ import {issueSchema} from "@/app/validationSchemas";
 import {z} from "zod"
 import {ErrorMessage, Spinner} from "@/app/components";
 import {Issue} from ".prisma/client";
+import prisma from "@/prisma/client";
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
@@ -26,7 +27,10 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     const onSubmit = handleSubmit(async (data)=> {
         try {
             setSubmitting(true)
-            await axios.post('/api/issues', data);
+
+            if (issue) await axios.patch('/api/issues/' + issue.id, data);
+            else await axios.post('/api/issues', data);
+
             router.push('/issues')
         } catch (error) {
             setSubmitting(false)
@@ -46,7 +50,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
                 <ErrorMessage>{errors.title?.message}</ErrorMessage>
                 <Controller defaultValue={issue?.description} render={({field})=><SimpleMDE placeholder="Description" {...field} />} name="description" control={control}/>
                 <ErrorMessage>{errors.description?.message}</ErrorMessage>
-                <Button disabled={isSubmitting}>Submit issue {isSubmitting && <Spinner />}</Button>
+                <Button disabled={isSubmitting}>{issue ? 'Update issue' : 'Submit new issue'} {isSubmitting && <Spinner />}</Button>
             </form>
         </div>
     );
