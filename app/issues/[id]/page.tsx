@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Pencil2Icon } from "@radix-ui/react-icons"
 import EditIssueButton from "@/app/issues/[id]/EditIssueButton";
 import IssueDetails from "@/app/issues/[id]/IssueDetails";
+import DeleteIssueButton from "@/app/issues/[id]/edit/DeleteIssueButton";
 
 interface Props {
     params: {id: string}
@@ -28,12 +29,15 @@ const IssueDetailPage = async ({params}: Props) => {
         notFound();
 
     return (
-        <Grid gap="5" columns={{initial:"1", md:"2"}}>
-            <Box>
+        <Grid gap="5" columns={{initial:"1", md:"5"}}>
+            <Box className="md:col-span-4">
                 <IssueDetails issue={issue} />
             </Box>
             <Box>
-                <EditIssueButton issueId={issue.id} />
+                <Flex direction="column" gap="2">
+                    <EditIssueButton issueId={issue.id} />
+                    <DeleteIssueButton issueId={issue.id} />
+                </Flex>
             </Box>
         </Grid>
     );
