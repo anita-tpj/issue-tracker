@@ -1,10 +1,10 @@
-import IssueForm from "@/app/issues/_components/IssueForm";
+import IssueFormClient from "@/app/issues/_components/IssueFormClient";
+
 
 
 const NewIssuePage = () => {
-
     return (
-        <IssueForm />
+        <IssueFormClient />
     );
 };
 
