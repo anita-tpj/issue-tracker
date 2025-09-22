@@ -3,7 +3,7 @@ import {resolveAppleWebApp} from "next/dist/lib/metadata/resolvers/resolve-basic
 import prisma from "@/prisma/client";
 import {notFound} from "next/navigation";
 import {Card, Flex, Heading, Text} from "@radix-ui/themes";
-import IssueStatusBadge from "@/app/components/IssueStatusBadge";
+import {IssueStatusBadge} from "@/app/components";
 import ReactMarkdown from "react-markdown";
 import delay from "delay";
 
