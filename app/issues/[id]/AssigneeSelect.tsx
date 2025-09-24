@@ -1,9 +1,20 @@
+'use client'
 import { Select } from "@radix-ui/themes";
-import React from 'react';
-import prisma from "@/prisma/client";
+import React, {useEffect, useState} from 'react';
+import {User} from ".prisma/client";
+import axios from "axios";
 
-const AssigneeSelect = async () => {
-    const users = await prisma.user.findMany();
+const AssigneeSelect = () => {
+    const [users, setUsers] = useState<User[]>([])
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+           const {data} = await axios.get<User[]>('/api/users')
+            setUsers(data)
+        }
+
+        fetchUsers();
+    }, []);
 
     return (
         <Select.Root>
