@@ -4,8 +4,8 @@ import {Status} from "@prisma/client";
 
 const StatusMap : Record<Status, {label: string, color: "red" | "violet" | "green"}> = {
     OPEN: {label: "Open", color: "red"},
-    IN_PROGRESS: {label: "Open", color: "violet"},
-    CLOSED: {label: "Open", color: "green"}
+    IN_PROGRESS: {label: "In Progress", color: "violet"},
+    CLOSED: {label: "Closed", color: "green"}
 }
 
 const IssueStatusBadge = ({status}: {status: Status}) => {
