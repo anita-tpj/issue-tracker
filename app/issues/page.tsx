@@ -1,13 +1,14 @@
 import React from 'react';
-import {Table} from "@radix-ui/themes";
+import {Flex, Table} from "@radix-ui/themes";
 import prisma from "@/prisma/client";
 import {IssueStatusBadge, Link} from "@/app/components";
 import delay from "delay";
 import IssueActions from "@/app/issues/IssueActions";
-import {Status} from "@prisma/client";
+import {Status} from ".prisma/client";
 import {Issue} from ".prisma/client";
 import NextLink from "next/link";
 import {ArrowUpIcon} from "@radix-ui/react-icons";
+import Pagination from "@/app/components/Pagination";
 
 interface Props {
     searchParams: { status: Status, orderBy: keyof Issue };
@@ -48,10 +49,13 @@ const IssuesPage = async ({searchParams} : Props) => {
         orderBy
     });
 
+    const issuesCount = issues.length;
+    const pageSize = 4;
+
     //await delay(2000)
 
     return (
-        <div>
+        <Flex direction="column" gap="5">
             <IssueActions/>
             <Table.Root variant="surface">
                 <Table.Header>
@@ -79,7 +83,8 @@ const IssuesPage = async ({searchParams} : Props) => {
                     ))}
                 </Table.Body>
             </Table.Root>
-        </div>
+            <Pagination itemsCount={issuesCount} currentPage={10} pageSize={pageSize} />
+        </Flex>
 
     );
 };
