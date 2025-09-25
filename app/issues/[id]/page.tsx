@@ -1,19 +1,12 @@
-import React from 'react';
-import {resolveAppleWebApp} from "next/dist/lib/metadata/resolvers/resolve-basics";
 import prisma from "@/prisma/client";
 import {notFound} from "next/navigation";
-import {Box, Button, Card, Flex, Grid, Heading, Text} from "@radix-ui/themes";
-import {IssueStatusBadge} from "@/app/components";
-import ReactMarkdown from "react-markdown";
+import {Box, Flex, Grid} from "@radix-ui/themes";
 import delay from "delay";
-import Link from "next/link";
-import { Pencil2Icon } from "@radix-ui/react-icons"
 import EditIssueButton from "@/app/issues/[id]/EditIssueButton";
 import IssueDetails from "@/app/issues/[id]/IssueDetails";
 import DeleteIssueButton from "@/app/issues/[id]/DeleteIssueButton";
 import {getServerSession} from "next-auth";
 import authOption from "@/app/auth/authOptions";
-import {NextResponse} from "next/server";
 import AssigneeSelect from "@/app/issues/[id]/AssigneeSelect";
 
 interface Props {
@@ -50,5 +43,19 @@ const IssueDetailPage = async ({params}: Props) => {
         </Grid>
     );
 };
+
+export async function generateMetadata({params} : Props) {
+    const issue = await prisma.issue.findUnique({
+        where: {
+            id: parseInt(params.id)
+        }
+    })
+
+    return {
+        title: issue?.title,
+        description: 'Details of issue ' + issue?.id
+    }
+
+}
 
 export default IssueDetailPage;
