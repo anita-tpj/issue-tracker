@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+
 import {Button, Flex, Text} from "@radix-ui/themes";
 import {ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon} from "@radix-ui/react-icons";
 import {useRouter, useSearchParams} from "next/navigation";
