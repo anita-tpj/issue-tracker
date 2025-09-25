@@ -1,25 +1,20 @@
 import React from 'react';
 import {Card, Flex, Heading, Text} from "@radix-ui/themes";
 import {Status} from ".prisma/client";
-import prisma from "@/prisma/client";
 import NextLink from "next/link";
 
-const IssuesSummary = async () => {
-    const openIssues = await prisma.issue.count({
-        where: {status:"OPEN"}
-    })
 
-    const inProgressIssues = await prisma.issue.count({
-        where: {status:"IN_PROGRESS"}
-    })
+interface Props {
+    open: number,
+    inProgress: number,
+    closed: number
+}
+const IssuesSummary = ({open, inProgress, closed}: Props) => {
 
-    const closedIssues = await prisma.issue.count({
-        where: {status:"CLOSED"}
-    })
     const containers: {label: string, value: number, status: Status}[] = [
-        {label: "Open Issues", value: openIssues, status: "OPEN"  },
-        {label: "In Progress Issues", value: inProgressIssues, status: "IN_PROGRESS"},
-        {label: "Closed Issues", value: closedIssues, status: "CLOSED"}
+        {label: "Open Issues", value: open, status: "OPEN"  },
+        {label: "In Progress Issues", value: inProgress, status: "IN_PROGRESS"},
+        {label: "Closed Issues", value: closed, status: "CLOSED"}
     ]
     return (
         <Card>
