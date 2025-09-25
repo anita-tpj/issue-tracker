@@ -1,5 +1,10 @@
-export default function Home() {
+import LatestIssues from "@/app/LatestIssues";
+
+export default async function Home() {
+
   return (
-      <div>Hello world</div>
+      <>
+          <LatestIssues />
+      </>
   )
 }
