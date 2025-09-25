@@ -21,8 +21,8 @@ const LatestIssues = async () => {
             <Table.Root>
                 <Table.Body>
                     {latestIssues.map(issue => (
-                        <Table.Row>
-                            <Table.Cell key={issue.id}>
+                        <Table.Row key={issue.id}>
+                            <Table.Cell>
                                <Flex justify="between">
                                    <Flex direction="column" gap="2" align="start">
                                        <NextLink href={`/issues/${issue.id}`}>{issue.title}</NextLink>

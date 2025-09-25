@@ -17,9 +17,7 @@ const IssuesSummary = ({open, inProgress, closed}: Props) => {
         {label: "Closed Issues", value: closed, status: "CLOSED"}
     ]
     return (
-        <Card>
-            <Heading mb="5" size="4">Issues Summary</Heading>
-            <Flex gap="3">
+        <Flex gap="3">
             {containers.map(container => (
                 <Card key={container.label}>
                     <Flex direction="column" gap="1">
@@ -28,8 +26,7 @@ const IssuesSummary = ({open, inProgress, closed}: Props) => {
                     </Flex>
                 </Card>
             ))}
-            </Flex>
-        </Card>
+        </Flex>
     );
 };
 
