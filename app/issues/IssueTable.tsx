@@ -1,9 +1,9 @@
 import React from 'react';
-import {Table} from "@radix-ui/themes";
+import {Avatar, Flex, Table} from "@radix-ui/themes";
 import NextLink from "next/link";
-import {ArrowUpIcon} from "@radix-ui/react-icons";
+import {ArrowDownIcon, ArrowUpIcon} from "@radix-ui/react-icons";
 import {IssueStatusBadge, Link} from "@/app/components";
-import {Issue, Status} from ".prisma/client";
+import {Issue, Status, User} from ".prisma/client";
 
 export interface IssueQuery {
     status?: Status;
@@ -14,22 +14,45 @@ export interface IssueQuery {
 
 interface Props {
     searchParams : IssueQuery
-    issues: Issue[]
+    issues: (Issue & { assignedToUser: Pick<User, "image" | "name"> | null })[];
 }
 
 const IssueTable = ({searchParams, issues}: Props) => {
+    const isActive = (col: keyof Issue) => searchParams.orderBy === col;
+    const nextOrder = (col: keyof Issue) =>
+        isActive(col) && searchParams.order === "asc" ? "desc" : "asc";
+
     return (
         <Table.Root variant="surface">
             <Table.Header>
                 <Table.Row>
-                    {columns.map((column) => (
-                        <Table.ColumnHeaderCell key={column.value} className={column.className}>
-                            <NextLink href={{
-                                query: { ...searchParams, orderBy: column.value }
-                            }}>{column.label}</NextLink>
-                            {column.value === searchParams.orderBy && <ArrowUpIcon className="inline"/>}
-                        </Table.ColumnHeaderCell>
-                    ))}
+                    {columns.map((column) => {
+                        const active = isActive(column.value);
+                        const order = active ? searchParams.order : undefined;
+                        return (
+                            <Table.ColumnHeaderCell
+                              key={column.value}
+                              className={column.className}
+                              aria-sort={active ? (order === "desc" ? "descending" : "ascending") : "none"}>
+                                <NextLink
+                                    href={{
+                                        query: {
+                                            ...searchParams,
+                                            orderBy: column.value,
+                                            order: nextOrder(column.value),
+                                            page: "1", // optional: reset pagination when sorting
+                                        },
+                                    }}
+                                >
+                                    {column.label}
+                                </NextLink>
+                              {(column.value === searchParams.orderBy && searchParams.order === "asc") &&
+                                  <ArrowUpIcon className="inline"/>}
+                              {(column.value === searchParams.orderBy && searchParams.order === "desc") &&
+                                  <ArrowDownIcon className="inline"/>}
+                            </Table.ColumnHeaderCell>
+                        )
+                    })}
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -41,6 +64,14 @@ const IssueTable = ({searchParams, issues}: Props) => {
                         </Table.Cell>
                         <Table.Cell className="hidden md:table-cell"><IssueStatusBadge status={issue.status} /></Table.Cell>
                         <Table.Cell className="hidden md:table-cell">{issue.createdAt.toDateString()}</Table.Cell>
+                        <Table.Cell className="hidden md:table-cell">
+                            {issue.assignedToUser &&
+                                <Flex gap="2" align="center">
+                                    <Avatar src={issue.assignedToUser.image!} fallback="?" radius="full" size="1" />
+                                    {issue.assignedToUser.name}
+                                </Flex>
+                            }
+                        </Table.Cell>
                     </Table.Row>
                 ))}
             </Table.Body>
@@ -53,7 +84,8 @@ const columns: {
     value: keyof Issue;
     className?: string;
 }[] = [
-    { label: "Issue", value: "title" },
+    {   label: "Issue",
+        value: "title" },
     {
         label: "Status",
         value: "status",
@@ -62,6 +94,11 @@ const columns: {
     {
         label: "Created",
         value: "createdAt",
+        className: "hidden md:table-cell",
+    },
+    {
+        label: "Assign to",
+        value: "assignedToUserId",
         className: "hidden md:table-cell",
     },
 ];
