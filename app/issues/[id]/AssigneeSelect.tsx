@@ -1,7 +1,7 @@
 'use client'
 import { Select } from "@radix-ui/themes";
 import React, {useEffect, useState} from 'react';
-import {Issue, User} from ".prisma/client";
+import {Issue, Status, User} from ".prisma/client";
 import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
 import {Skeleton} from "@/app/components";
@@ -16,9 +16,11 @@ const AssigneeSelect = ({issue}: {issue: Issue}) => {
     if(error) return null
 
     const assignIssue = (userId: string) => {
+
         axios
-            .patch("/xapi/issues/" + issue.id, {
+            .patch("/api/issues/" + issue.id, {
                 assignedToUserId: (userId && userId !== " ") ?  userId : null,
+                status: (userId && userId !== " ") ? Status.IN_PROGRESS : issue.status
             })
             .catch(() => {
                 toast.error("Changes could not be saved.");
