@@ -3,26 +3,30 @@ import prisma from "@/prisma/client";
 import IssueActions from "@/app/issues/IssueActions";
 import {Status} from ".prisma/client";
 import Pagination from "@/app/components/Pagination";
+import PageSizeSelect from "@/app/components/PageSizeSelect";
 import IssueTable, {columnNames, IssueQuery} from "@/app/issues/IssueTable";
 import delay from "delay";
 import {Metadata} from "next";
 
 interface Props {
-    searchParams: IssueQuery
+    searchParams: Promise<IssueQuery>
 }
 
 const IssuesPage = async ({searchParams} : Props) => {
+    const resolvedSearchParams = await searchParams;
+
     const statuses = Object.values(Status);
-    const status = statuses.includes(searchParams.status) ? searchParams.status : undefined
+    const status = resolvedSearchParams.status && statuses.includes(resolvedSearchParams.status)
+        ? resolvedSearchParams.status
+        : undefined;
     const where = { status };
 
-    const orderBy = columnNames
-        .includes(searchParams.orderBy)
-        ? { [searchParams.orderBy]: 'asc' }
+    const orderBy = resolvedSearchParams.orderBy && columnNames.includes(resolvedSearchParams.orderBy)
+        ? { [resolvedSearchParams.orderBy]: 'asc' }
         : undefined;
 
-    const page = parseInt(searchParams.page) || 1;
-    const pageSize = 10;
+    const page = parseInt(resolvedSearchParams.page || "1") || 1;
+    const pageSize = parseInt(resolvedSearchParams.pageSize || "10") || 10;
 
     const issues = await prisma.issue.findMany({
         where,
@@ -38,8 +42,11 @@ const IssuesPage = async ({searchParams} : Props) => {
     return (
         <Flex direction="column" gap="5">
             <IssueActions/>
-            <IssueTable searchParams={searchParams} issues={issues} />
-            <Pagination itemsCount={issueCount} currentPage={page} pageSize={pageSize} />
+            <IssueTable searchParams={resolvedSearchParams} issues={issues} />
+            <Flex justify="between" align="center">
+                <Pagination itemsCount={issueCount} currentPage={page} pageSize={pageSize} />
+                <PageSizeSelect pageSize={pageSize} />
+            </Flex>
         </Flex>
 
     );
