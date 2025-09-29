@@ -6,9 +6,10 @@ import {IssueStatusBadge, Link} from "@/app/components";
 import {Issue, Status} from ".prisma/client";
 
 export interface IssueQuery {
-    status: Status,
-    orderBy: keyof Issue,
-    page: string,
+    status?: Status;
+    orderBy?: keyof Issue;
+    page?: string;
+    pageSize?: string;
 }
 
 interface Props {

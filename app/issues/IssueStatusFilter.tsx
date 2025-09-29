@@ -17,13 +17,16 @@ const IssueStatusFilter = () => {
 
     return (
         <Select.Root onValueChange={(status) => {
-            const params = new URLSearchParams();
-            if (status) params.append('status', status);
-            if (searchParams.get('orderBy'))
-                params.append('orderBy', searchParams.get('orderBy')!);
+            const params = new URLSearchParams(searchParams.toString());
+            if (status && status.trim()) {
+                params.set('status', status as Status);
+            } else {
+                params.delete('status');
+            }
+            params.delete('page');
 
-            const query = params.size ? '?' + params.toString() : '';
-            router.push('/issues' + query);
+            const query = params.toString();
+            router.push(`/issues${query ? `?${query}` : ''}`);
         }}>
             <Select.Trigger placeholder="Filter by status..."/>
             <Select.Content>
